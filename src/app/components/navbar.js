@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const Navbar = () => {
@@ -12,6 +12,49 @@ const Navbar = () => {
     { id: 1, label: 'About', sectionId: 'about' },
     { id: 2, label: 'Projects', sectionId: 'projects' },
   ];
+
+  useEffect(() => {
+    let isScrolling = false;
+    
+    const handleScroll = () => {
+      if (isScrolling) return;
+      
+      isScrolling = true;
+      
+      // Wait for scroll to finish
+      setTimeout(() => {
+        const sections = tabs.map(tab => document.getElementById(tab.sectionId));
+        const viewportHeight = window.innerHeight;
+        const scrollPosition = window.scrollY;
+        
+        // Find the closest section
+        let closestSection = 0;
+        let minDistance = Infinity;
+        
+        sections.forEach((section, index) => {
+          if (section) {
+            const distance = Math.abs(section.offsetTop - scrollPosition);
+            if (distance < minDistance) {
+              minDistance = distance;
+              closestSection = index;
+            }
+          }
+        });
+        
+        // Only update if we're not already on this section
+        if (closestSection !== activeTab) {
+          setPrevActiveTab(activeTab);
+          setActiveTab(closestSection);
+          sections[closestSection]?.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        isScrolling = false;
+      }, 100);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [activeTab, tabs]);
 
   const handleTabClick = (tabId) => {
     setPrevActiveTab(activeTab);
