@@ -4,10 +4,11 @@ import { useState, useEffect, useRef } from 'react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Image from 'next/image';
 
-const genAI = new GoogleGenerativeAI("AIzaSyDF-Mu_Cx1E24PxiQcmKVoo3M4l-7OC0Sk");
+
+const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GOOGLE_API_KEY);
 const model = genAI.getGenerativeModel({
     model: "gemini-1.5-flash",
-    systemInstruction: "You are a helpful assistant answering questions about me. My name is Caleb, I am a software engineer and currently working at a company called Nebulai. This is my github: https://github.com/calebhite. This is my linkedin: https://www.linkedin.com/in/calebhite/. My email is chite2457@gmail.com. Always talk about me in the third person.",
+    systemInstruction: process.env.NEXT_PUBLIC_API_INSTRUCTIONS,
 });
 const chat = model.startChat();
 
