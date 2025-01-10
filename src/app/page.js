@@ -4,6 +4,7 @@ import LandingPage from './components/landingPage';
 import Navbar from './components/navbar';
 import About from './components/about';
 import Projects from './components/project';
+import Chatbox from './components/chatbox';
 import './globals.css';
 
 export default function Home() {
@@ -20,6 +21,7 @@ export default function Home() {
         <div id="projects" className="snap-start">
           <Projects />
         </div>
+        <Chatbox />
       </div>
     </main>
   );

@@ -87,9 +87,8 @@ const Navbar = () => {
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => handleTabClick(tab.id)}
-              className={`relative z-10 flex w-full items-center justify-center px-3 py-2 text-sm font-medium transition-colors duration-300
-                ${activeTab === tab.id ? 'text-white' : 'text-gray-400 hover:text-gray-200'}`}
+              className={`cursor-default relative z-10 flex w-full items-center justify-center px-3 py-2 text-sm font-medium transition-colors duration-300
+                ${activeTab === tab.id ? 'text-white' : 'text-gray-400'}`}
             >
               {tab.label}
             </button>
