@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const Navbar = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [prevActiveTab, setPrevActiveTab] = useState(0);
+  const isManualScroll = useRef(false);
 
   const tabs = [
     { id: 0, label: 'Home', sectionId: 'landing' },
@@ -15,22 +16,22 @@ const Navbar = () => {
 
   useEffect(() => {
     let isScrolling = false;
-    
+
     const handleScroll = () => {
-      if (isScrolling) return;
-      
+      if (isScrolling || isManualScroll.current) return;
+
       isScrolling = true;
-      
+
       // Wait for scroll to finish
       setTimeout(() => {
         const sections = tabs.map(tab => document.getElementById(tab.sectionId));
         const viewportHeight = window.innerHeight;
         const scrollPosition = window.scrollY;
-        
+
         // Find the closest section
         let closestSection = 0;
         let minDistance = Infinity;
-        
+
         sections.forEach((section, index) => {
           if (section) {
             const distance = Math.abs(section.offsetTop - scrollPosition);
@@ -40,18 +41,18 @@ const Navbar = () => {
             }
           }
         });
-        
+
         // Only update if we're not already on this section
         if (closestSection !== activeTab) {
           setPrevActiveTab(activeTab);
           setActiveTab(closestSection);
           sections[closestSection]?.scrollIntoView({ behavior: 'smooth' });
         }
-        
+
         isScrolling = false;
       }, 100);
     };
-    
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [activeTab, tabs]);
@@ -59,12 +60,18 @@ const Navbar = () => {
   const handleTabClick = (tabId) => {
     setPrevActiveTab(activeTab);
     setActiveTab(tabId);
-    
-    // Scroll to the corresponding section
+
+    // Temporarily disable scroll event listener
+    isManualScroll.current = true;
     const section = document.getElementById(tabs[tabId].sectionId);
     if (section) {
       section.scrollIntoView({ behavior: 'smooth' });
     }
+
+    // Re-enable scroll event listener after scroll is complete
+    setTimeout(() => {
+      isManualScroll.current = false;
+    }, 500); // Adjust timeout as needed
   };
 
   return (
@@ -87,7 +94,8 @@ const Navbar = () => {
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              className={`cursor-default relative z-10 flex w-full items-center justify-center px-3 py-2 text-sm font-medium transition-colors duration-300
+              onClick={() => handleTabClick(tab.id)}
+              className={`cursor-pointer hover:text-white relative z-10 flex w-full items-center justify-center px-3 py-2 text-sm font-medium transition-colors duration-300
                 ${activeTab === tab.id ? 'text-white' : 'text-gray-400'}`}
             >
               {tab.label}
