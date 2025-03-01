@@ -76,7 +76,7 @@ export default function About() {
                           hover:border-gray-700 cursor-pointer">
               <h3 className="text-2xl font-semibold mb-4 text-white">Current Focus</h3>
               <p className="text-gray-300">
-                I'm currently working remotely at an AI startup in Miami, Florida. My projects are focused on leveraging Web3 technology and improving my proficiency of different languages.
+                I will be working this Summer at FanThreeSixty as a Software Engineer. 
               </p>
             </div>
 
